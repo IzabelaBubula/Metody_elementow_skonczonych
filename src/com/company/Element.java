@@ -9,7 +9,6 @@ public class Element {
     private double[][] dn_x;
     public double[][] dn_y;
     public int[] ID;
-    public double H[][] = new double[4][4];
 
     Element(int[] ID){
         jakobiany = new Jakobian[Data.data_points * Data.data_points];
@@ -19,7 +18,6 @@ public class Element {
                 this.hbc[i][j] = 0;
                 this.c[i][j] = 0;
                 this.h[i][j] = 0;
-                this.H[i][j] = 0.0;
             }
             this.p[i] = 0;
         }
