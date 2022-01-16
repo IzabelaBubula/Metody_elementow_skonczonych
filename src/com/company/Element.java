@@ -46,6 +46,7 @@ public class Element {
 
             //Show.showdndxdy(dndx, dndy);
             //użwyany waga * waga
+//            System.out.println("Waga 1: " + element42D.gauss[1][i%Data.data_points] + " waga 2: " + element42D.gauss[1][(int)(i/Data.data_points)] + " iloczyn: " + element42D.gauss[1][i % Data.data_points] * element42D.gauss[1][(int)(i / Data.data_points)]);
             this.generateHMatrix((element42D.gauss[1][i % Data.data_points] * element42D.gauss[1][(int)(i / Data.data_points)]),
                     i, dndx, dndy);
 

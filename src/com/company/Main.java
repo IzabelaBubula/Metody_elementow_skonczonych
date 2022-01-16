@@ -42,7 +42,7 @@ public class Main {
             }
 
             //wypisanie min i max temp dla każdej iteracji
-            System.out.println("In " + i + ": min: " + Arrays.stream(temperature).min().getAsDouble() + ", max: " + Arrays.stream(temperature).max().getAsDouble());
+            System.out.println("\nIn " + i + ": min: " + Arrays.stream(temperature).min().getAsDouble() + ", max: " + Arrays.stream(temperature).max().getAsDouble());
 
         }
     }

@@ -77,8 +77,8 @@ public class HG {
         //agregacja H
         for(int i = 0; i < 4; i ++){
             for(int j = 0; j < 4; j ++){
-//                HOnly[e1.ID[i]][e1.ID[j]] += e1.h[i][j];
-//                C[e1.ID[i]][e1.ID[j]] += e1.c[i][j];
+                HOnly[e1.ID[i]][e1.ID[j]] += e1.h[i][j];
+                C[e1.ID[i]][e1.ID[j]] += e1.c[i][j];
                 H[e1.ID[i]][e1.ID[j]] += e1.h[i][j] + e1.hbc[i][j] + (e1.c[i][j]/Data.delta_T);
 
             }
