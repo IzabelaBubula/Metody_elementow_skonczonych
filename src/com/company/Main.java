@@ -13,11 +13,31 @@ public class Main {
 
         //liczenie temperatury w kroku czasowym delta_T
         for(int i = (int)Data.delta_T; i <= Data.const_time; i+= Data.delta_T){
+
             //inicjalizacja H_global do agregacji i równań
             HG.initialization(g1.nN);
 
             //generowanie H i P glob oraz dla układu niestacjonarnego macierz C
-            HG.HPGenaration(g1);
+            Element4_2D element42D = new Element4_2D();
+            for(int k = 0; k < g1.nE; k++) {
+                Element e1 = g1.elements.get(k);
+
+                //każdy punkt całkowania 2D ma swój jakobian
+                //jakobian: stosunek pół układu globalnego k lokalnego
+                Jakobian.generateJakobian(k, element42D, g1);
+
+                //generowanie macierzy H dla każdego eleementu
+                e1.countH(element42D);
+
+                //generowanie Hbc i P
+                e1.countHbcP(element42D, g1);
+
+                //generowanie C (pojemność cieplna) potrzebne do obliczenia temp w kroku delta_t
+                e1.countC(element42D);
+
+                //agregacja
+                HG.agragate(e1, g1);
+            }
 
             //łączenie H i P
             HG.expandMatrix();
@@ -34,7 +54,7 @@ public class Main {
 
             //liczenie wektora temp macierzy expand
             int n = HG.expand.length;
-            double[] temperature = Gauss.countGauss(HG.expand);
+            double[] temperature = Gauss.count(HG.expand);
 
             //przypisanie temperatur do węzłó
             for(int j = 0; j < n; j ++){

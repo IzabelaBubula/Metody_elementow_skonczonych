@@ -30,28 +30,28 @@ public class Jakobian {
         Element e1 = g1.elements.get(id);
         //Wzór N1x1 + N2x2 + N3x3 + N4x4, N <- funkcja kształtu
         j1.jakobian[0][0] =
-                element42d.dn_dksi[nr][0] * g1.nodes.get(e1.ID[0]).x
-                + element42d.dn_dksi[nr][1] * g1.nodes.get(e1.ID[1]).x
-                + element42d.dn_dksi[nr][2] * g1.nodes.get(e1.ID[2]).x
-                + element42d.dn_dksi[nr][3] * g1.nodes.get(e1.ID[3]).x;
+                element42d.d_n_d_ksi[nr][0] * g1.nodes.get(e1.ID[0]).x
+                + element42d.d_n_d_ksi[nr][1] * g1.nodes.get(e1.ID[1]).x
+                + element42d.d_n_d_ksi[nr][2] * g1.nodes.get(e1.ID[2]).x
+                + element42d.d_n_d_ksi[nr][3] * g1.nodes.get(e1.ID[3]).x;
 
         j1.jakobian[1][0] =
-                element42d.dn_dksi[nr][0] * g1.nodes.get(e1.ID[0]).y
-                + element42d.dn_dksi[nr][1] * g1.nodes.get(e1.ID[1]).y
-                + element42d.dn_dksi[nr][2] * g1.nodes.get(e1.ID[2]).y
-                + element42d.dn_dksi[nr][3] * g1.nodes.get(e1.ID[3]).y;
+                element42d.d_n_d_ksi[nr][0] * g1.nodes.get(e1.ID[0]).y
+                + element42d.d_n_d_ksi[nr][1] * g1.nodes.get(e1.ID[1]).y
+                + element42d.d_n_d_ksi[nr][2] * g1.nodes.get(e1.ID[2]).y
+                + element42d.d_n_d_ksi[nr][3] * g1.nodes.get(e1.ID[3]).y;
 
         j1.jakobian[0][1] =
-                element42d.dn_deta[nr][0] * g1.nodes.get(e1.ID[0]).x
-                + element42d.dn_deta[nr][1] * g1.nodes.get(e1.ID[1]).x
-                + element42d.dn_deta[nr][2] * g1.nodes.get(e1.ID[2]).x
-                + element42d.dn_deta[nr][3] * g1.nodes.get(e1.ID[3]).x;
+                element42d.d_n_d_eta[nr][0] * g1.nodes.get(e1.ID[0]).x
+                + element42d.d_n_d_eta[nr][1] * g1.nodes.get(e1.ID[1]).x
+                + element42d.d_n_d_eta[nr][2] * g1.nodes.get(e1.ID[2]).x
+                + element42d.d_n_d_eta[nr][3] * g1.nodes.get(e1.ID[3]).x;
 
         j1.jakobian[1][1] =
-                element42d.dn_deta[nr][0] * g1.nodes.get(e1.ID[0]).y
-                + element42d.dn_deta[nr][1] * g1.nodes.get(e1.ID[1]).y
-                + element42d.dn_deta[nr][2] * g1.nodes.get(e1.ID[2]).y
-                + element42d.dn_deta[nr][3] * g1.nodes.get(e1.ID[3]).y;
+                element42d.d_n_d_eta[nr][0] * g1.nodes.get(e1.ID[0]).y
+                + element42d.d_n_d_eta[nr][1] * g1.nodes.get(e1.ID[1]).y
+                + element42d.d_n_d_eta[nr][2] * g1.nodes.get(e1.ID[2]).y
+                + element42d.d_n_d_eta[nr][3] * g1.nodes.get(e1.ID[3]).y;
 
         j1.det_j = (jakobian[0][0] * jakobian[1][1]) - (jakobian[1][0] * jakobian[0][1]);
 

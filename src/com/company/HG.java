@@ -40,29 +40,6 @@ public class HG {
         }
     }
 
-    public static void HPGenaration(Grid g1){
-        Element4_2D element42D = new Element4_2D();
-        for(int i = 0; i < g1.nE; i++) {
-            Element e1 = g1.elements.get(i);
-
-            //każdy punkt całkowania 2D ma swój jakobian
-            //jakobian: stosunek pół układu globalnego i lokalnego
-            Jakobian.generateJakobian(i, element42D, g1);
-
-            //generowanie macierzy H dla każdego eleementu
-            e1.countH(element42D);
-
-            //generowanie Hbc i P
-            e1.countHbcP(element42D, g1);
-
-            //generowanie C (pojemność cieplna) potrzebne do obliczenia temp w kroku delta_t
-            e1.countC(element42D);
-
-            //agregacja
-            agragate(e1, g1);
-        }
-    }
-
     /*
     do agregacji H wykorzystujemy:
         - lokalne macierze H każdego elementu
@@ -73,7 +50,7 @@ public class HG {
         - P lokalne
         - C
      */
-    private static void agragate(Element e1, Grid g1){
+    public static void agragate(Element e1, Grid g1){
         //agregacja H
         for(int i = 0; i < 4; i ++){
             for(int j = 0; j < 4; j ++){

@@ -25,7 +25,7 @@ public class Gauss {
         return gaussTable;
     }
 
-    public static double[] countGauss(double[][] expanded){
+    public static double[] count(double[][] expanded){
         int temp = expanded.length;
         double[] x = new double[temp];
 

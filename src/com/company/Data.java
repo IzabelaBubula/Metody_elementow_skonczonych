@@ -1,7 +1,7 @@
 package com.company;
 
 public class Data {
-    static final int data_points = 2;                                       // punkty całkowania
+    static final int data_points = 3;                                       // punkty całkowania
     static final double const_TO = 100.0;                                    // temaperatura początkowa
     static final double[] conts_temp_1 = {1200.0, 1200.0, 1200.0, 1200.0};  // maksymalna temperatura końcowa
     static final double const_K = 25.0;                                     // anizotropowy współczynnik przewodzenia ciepła

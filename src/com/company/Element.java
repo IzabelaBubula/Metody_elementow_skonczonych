@@ -31,22 +31,25 @@ public class Element {
 
             //wyliczanie dn/dx dla każdej funkcji kształtu
             //jakobian inverted[0] * dN/dksi~eta~ + (jakobian inverted[1] * Dn/deta~ksi~)
-            dndx[0] = (jakobiany[i].jakobian_inverted[0][0] * element42D.dn_dksi[i][0]) + (jakobiany[i].jakobian_inverted[0][1] * element42D.dn_deta[i][0]);
-            dndx[1] = (jakobiany[i].jakobian_inverted[0][0] * element42D.dn_dksi[i][1]) + (jakobiany[i].jakobian_inverted[0][1] * element42D.dn_deta[i][1]);
-            dndx[2] = (jakobiany[i].jakobian_inverted[0][0] * element42D.dn_dksi[i][2]) + (jakobiany[i].jakobian_inverted[0][1] * element42D.dn_deta[i][2]);
-            dndx[3] = (jakobiany[i].jakobian_inverted[0][0] * element42D.dn_dksi[i][3]) + (jakobiany[i].jakobian_inverted[0][1] * element42D.dn_deta[i][3]);
+            dndx[0] = (jakobiany[i].jakobian_inverted[0][0] * element42D.d_n_d_ksi[i][0]) + (jakobiany[i].jakobian_inverted[0][1] * element42D.d_n_d_eta[i][0]);
+            dndx[1] = (jakobiany[i].jakobian_inverted[0][0] * element42D.d_n_d_ksi[i][1]) + (jakobiany[i].jakobian_inverted[0][1] * element42D.d_n_d_eta[i][1]);
+            dndx[2] = (jakobiany[i].jakobian_inverted[0][0] * element42D.d_n_d_ksi[i][2]) + (jakobiany[i].jakobian_inverted[0][1] * element42D.d_n_d_eta[i][2]);
+            dndx[3] = (jakobiany[i].jakobian_inverted[0][0] * element42D.d_n_d_ksi[i][3]) + (jakobiany[i].jakobian_inverted[0][1] * element42D.d_n_d_eta[i][3]);
 
             //wyliczanie dn/dy dla każdej funkcji kształtu
-            dndy[0] = (jakobiany[i].jakobian_inverted[1][0] * element42D.dn_dksi[i][0]) + (jakobiany[i].jakobian_inverted[1][1] * element42D.dn_deta[i][0]);
-            dndy[1] = (jakobiany[i].jakobian_inverted[1][0] * element42D.dn_dksi[i][1]) + (jakobiany[i].jakobian_inverted[1][1] * element42D.dn_deta[i][1]);
-            dndy[2] = (jakobiany[i].jakobian_inverted[1][0] * element42D.dn_dksi[i][2]) + (jakobiany[i].jakobian_inverted[1][1] * element42D.dn_deta[i][2]);
-            dndy[3] = (jakobiany[i].jakobian_inverted[1][0] * element42D.dn_dksi[i][3]) + (jakobiany[i].jakobian_inverted[1][1] * element42D.dn_deta[i][3]);
+            dndy[0] = (jakobiany[i].jakobian_inverted[1][0] * element42D.d_n_d_ksi[i][0]) + (jakobiany[i].jakobian_inverted[1][1] * element42D.d_n_d_eta[i][0]);
+            dndy[1] = (jakobiany[i].jakobian_inverted[1][0] * element42D.d_n_d_ksi[i][1]) + (jakobiany[i].jakobian_inverted[1][1] * element42D.d_n_d_eta[i][1]);
+            dndy[2] = (jakobiany[i].jakobian_inverted[1][0] * element42D.d_n_d_ksi[i][2]) + (jakobiany[i].jakobian_inverted[1][1] * element42D.d_n_d_eta[i][2]);
+            dndy[3] = (jakobiany[i].jakobian_inverted[1][0] * element42D.d_n_d_ksi[i][3]) + (jakobiany[i].jakobian_inverted[1][1] * element42D.d_n_d_eta[i][3]);
 
             //Show.showdndxdy(dndx, dndy);
-            //użwyany waga * waga
-//            System.out.println("Waga 1: " + element42D.gauss[1][i%Data.data_points] + " waga 2: " + element42D.gauss[1][(int)(i/Data.data_points)] + " iloczyn: " + element42D.gauss[1][i % Data.data_points] * element42D.gauss[1][(int)(i / Data.data_points)]);
-            this.generateHMatrix((element42D.gauss[1][i % Data.data_points] * element42D.gauss[1][(int)(i / Data.data_points)]),
-                    i, dndx, dndy);
+            for(int k = 0; k < 4; k ++){
+                for(int j = 0; j < 4; j ++){
+                    this.h[k][j] += ((dndx[k] * dndx[j]) + (dndy[k] * dndy[j])) * (element42D.gauss[1][i % Data.data_points] * element42D.gauss[1][(int)(i / Data.data_points)])* Data.const_K * this.jakobiany[i].det_j;
+
+//                this.H[k][j] += this.h[k][j];
+                }
+            }
 
         }
 //        System.out.println("\n\nH matrix: ");
@@ -59,15 +62,6 @@ public class Element {
 //        System.out.println("\n\n");
     }
 
-    private void generateHMatrix(double GW, int pt, double[] dndx, double[] dndy) { // gaussWeight, element, dn_x, dn_y
-        for(int i = 0; i < 4; i ++){
-            for(int j = 0; j < 4; j ++){
-                this.h[i][j] += ((dndx[i] * dndx[j]) + (dndy[i] * dndy[j])) * GW * Data.const_K * this.jakobiany[pt].det_j;
-
-//                this.H[i][j] += this.h[i][j];
-            }
-        }
-    }
 
     //warunek brzegowy dla elem skończonego, HBC i P
     public void countHbcP(Element4_2D element42D, Grid g1){
@@ -100,7 +94,7 @@ public class Element {
             for(int j = 0; j < Data.data_points; j++){
 
                 //deklarowanie tablicy funkcji kształtu
-                double[] functions = new double[] {0.0, 0.0, 0.0, 0.0};
+                double[] shape_functions = new double[] {0.0, 0.0, 0.0, 0.0};
 
                 //funkcja kształtu N = 1/4 * (1 - Ksi) * (1 - ETa)
                 if(i == 1 || i == 3) {
@@ -133,71 +127,52 @@ public class Element {
                     eta = eta;
 
                 //wyliczanie funkcji kształu dla Hbc i P(dwie funkcje dla 2 pkt na brzegu)
-                if(i == 0 ) functions[i] = (1.0/4.0) * (1.0 + ((-1.0) * ksi)) * (1.0 + ((-1.0) * eta));
-                else if(i == 1) functions[i] = (1.0/4.0) * (1.0 + ((1.0) * ksi)) * (1.0 + ((-1.0) * eta));
-                else if(i == 2) functions[i] = (1.0/4.0) * (1.0 + ((1.0) * ksi)) * (1.0 + ((1.0) * eta));
-                else if(i == 3) functions[i] = (1.0/4.0) * (1.0 + ((-1.0) * ksi)) * (1.0 + ((1.0) * eta));
+                if(i == 0 ) shape_functions[i] = (1.0/4.0) * (1.0 + ((-1.0) * ksi)) * (1.0 + ((-1.0) * eta));
+                else if(i == 1) shape_functions[i] = (1.0/4.0) * (1.0 + ((1.0) * ksi)) * (1.0 + ((-1.0) * eta));
+                else if(i == 2) shape_functions[i] = (1.0/4.0) * (1.0 + ((1.0) * ksi)) * (1.0 + ((1.0) * eta));
+                else if(i == 3) shape_functions[i] = (1.0/4.0) * (1.0 + ((-1.0) * ksi)) * (1.0 + ((1.0) * eta));
 
-                if(iTwo == 0) functions[iTwo] = (1.0/4.0) * (1.0 + ((-1.0) * ksi)) * (1.0 + ((-1.0) * eta));
-                else if(iTwo == 1) functions[iTwo] = (1.0/4.0) * (1.0 + ((1.0) * ksi)) * (1.0 + ((-1.0) * eta));
-                else if(iTwo == 2) functions[iTwo] = (1.0/4.0) * (1.0 + ((1.0) * ksi)) * (1.0 + ((1.0) * eta));
-                else if(iTwo == 3) functions[iTwo] = (1.0/4.0) * (1.0 + ((-1.0) * ksi)) * (1.0 + ((1.0) * eta));
+                if(iTwo == 0) shape_functions[iTwo] = (1.0/4.0) * (1.0 + ((-1.0) * ksi)) * (1.0 + ((-1.0) * eta));
+                else if(iTwo == 1) shape_functions[iTwo] = (1.0/4.0) * (1.0 + ((1.0) * ksi)) * (1.0 + ((-1.0) * eta));
+                else if(iTwo == 2) shape_functions[iTwo] = (1.0/4.0) * (1.0 + ((1.0) * ksi)) * (1.0 + ((1.0) * eta));
+                else if(iTwo == 3) shape_functions[iTwo] = (1.0/4.0) * (1.0 + ((-1.0) * ksi)) * (1.0 + ((1.0) * eta));
 
-                // Liczenie macierzy Hbc, tutaj jest wzór integral_S = alfa({N} * {N}_trans)*dS
-                // dS to det_j to długość odcinka / 2
-                countHBC(element42D.gauss[1][j], functions, odcinek);
+                for(int n = 0; n < shape_functions.length; n++){
+                    this.hbc[0][n] += shape_functions[0] * shape_functions[n] * Data.const_ALPHA * element42D.gauss[1][j] * odcinek;
+                    this.hbc[1][n] += shape_functions[1] * shape_functions[n] * Data.const_ALPHA * element42D.gauss[1][j] * odcinek;
+                    this.hbc[2][n] += shape_functions[2] * shape_functions[n] * Data.const_ALPHA * element42D.gauss[1][j] * odcinek;
+                    this.hbc[3][n] += shape_functions[3] * shape_functions[n] * Data.const_ALPHA * element42D.gauss[1][j] * odcinek;
+                }
 
-                // liczenie wektora P: integral_S =  alfa * {N} * t_0 * dS
-                // tak jak poprzednio dS to det_j czyli długość odcinka / 2
-                countP(j, element42D.gauss[1][j], functions, odcinek);
+                for(int k = 0; k < 4; k ++){
+                    this.p[k] += shape_functions[k] *Data.const_ALPHA * odcinek * Data.conts_temp_1[j] * element42D.gauss[1][j];
+                }
+
             }
         }
     }
 
-    // Macierz C - czyli pojemność cieplna elementu, liczona jest tak jak macierz H dla funkcji kształtu
-    // każdego elementu ze wzoru integral_V = RO * C * ({N}*{N}_trans)dV
-    // przy wyliczeniu tego det_j jest to wyznacznik z obiektu jakobian, który jest liczony wyżej
     public void countC(Element4_2D element42D){
-        int c = 0;
-        for(int i = 0; i < Data.data_points; i ++){
-            double pc1 = element42D.gauss[0][i]; //współczynnik gauss-lagrange'a
+        int temp = 0;
+        for(int k = 0; k < Data.data_points; k++){
+            double gauss1 = element42D.gauss[0][k]; //współczynnik gauss-lagrange'a
 
-            for(int j = 0; j < Data.data_points; j ++){
-                double pc2 = element42D.gauss[0][j];
-                double[] shape = new double[4]; //funkcje kształtu
+            for(int m = 0; m < Data.data_points; m ++){
+                double gauss2 = element42D.gauss[0][m];
+                double[] tab1 = new double[4]; //funkcje kształtu
 
-                shape[0] = (1.0/4.0) * (1.0 - (pc1)) * (1.0 - (pc2));
-                shape[1] = (1.0/4.0) * (1.0 + (pc1)) * (1.0 - (pc2));
-                shape[2] = (1.0/4.0) * (1.0 + (pc1)) * (1.0 + (pc2));
-                shape[3] = (1.0/4.0) * (1.0 - (pc1)) * (1.0 + (pc2));
+                tab1[0] = (1.0/4.0) * (1.0 - (gauss1)) * (1.0 - (gauss2));
+                tab1[1] = (1.0/4.0) * (1.0 + (gauss1)) * (1.0 - (gauss2));
+                tab1[2] = (1.0/4.0) * (1.0 + (gauss1)) * (1.0 + (gauss2));
+                tab1[3] = (1.0/4.0) * (1.0 - (gauss1)) * (1.0 + (gauss2));
 
-                generateC(element42D.gauss[1][i] * element42D.gauss[1][j], c, shape);
-
-                c++;
+                for (int i = 0; i < 4; i ++){
+                    for (int j = 0; j < 4; j ++){
+                        this.c[i][j] += tab1[i] * tab1[j] * Data.const_RO * Data.const_C * element42D.gauss[1][k] * element42D.gauss[1][m] * this.jakobiany[temp].det_j;
+                    }
+                }
+                temp++;
             }
-        }
-    }
-
-    private void generateC(double GW, int pt, double[] shapes){
-        for (int i = 0; i < 4; i ++){
-            for (int j = 0; j < 4; j ++){
-                this.c[i][j] += shapes[i] * shapes[j] * Data.const_RO * Data.const_C * GW * this.jakobiany[pt].det_j;
-            }
-        }
-    }
-
-    private void countP(int wall, double weigth, double[] shapes, double det_jacobian){
-        for(int i = 0; i < 4; i ++){
-            this.p[i] += shapes[i] *Data.const_ALPHA * det_jacobian * Data.conts_temp_1[wall] * weigth;
-        }
-    }
-
-    private void countHBC(double weight, double[] shapes, double det_jacobian){
-        for(int i = 0; i < shapes.length; i++){
-            this.hbc[0][i] += shapes[0] * shapes[i] * Data.const_ALPHA * weight * det_jacobian;
-            this.hbc[1][i] += shapes[1] * shapes[i] * Data.const_ALPHA * weight * det_jacobian;
-            this.hbc[2][i] += shapes[2] * shapes[i] * Data.const_ALPHA * weight * det_jacobian;
-            this.hbc[3][i] += shapes[3] * shapes[i] * Data.const_ALPHA * weight * det_jacobian;
         }
     }
 
